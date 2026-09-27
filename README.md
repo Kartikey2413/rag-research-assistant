@@ -29,11 +29,12 @@ question ─▶ retriever (search your docs) ─▶ top-k passages ─▶ LLM �
      external dependencies, runs anywhere, no internet required.
    - `sentence-transformers` — dense embeddings for better semantic recall
      on paraphrased queries. Downloads a small model on first use.
-3. **Generate** — the top-matching chunks are passed to Claude, which
-   answers using only that context and cites its sources (`src/llm_client.py`).
-   If no API key is set, it falls back to returning the best-matching
-   passages directly, so the project is still fully runnable with zero
-   setup.
+3. **Generate** — the top-matching chunks are passed to a locally running
+   LLM via [Ollama](https://ollama.com), which answers using only that
+   context and cites its sources (`src/llm_client.py`). If Ollama isn't
+   running or the model hasn't been pulled, it falls back to returning the
+   best-matching passages directly, so the project is still fully runnable
+   with zero setup.
 
 ## Quickstart
 
@@ -42,8 +43,9 @@ git clone https://github.com/<your-username>/rag-research-assistant.git
 cd rag-research-assistant
 pip install -r requirements.txt
 
-# optional — enables grounded LLM answers instead of the extractive fallback
-cp .env.example .env  # then add your ANTHROPIC_API_KEY
+# install Ollama (if you don't already have it) — https://ollama.com/download
+# then pull a model to enable grounded LLM answers instead of the extractive fallback
+ollama pull llama3
 
 # ask a question against the bundled sample docs
 python cli.py "What is retrieval-augmented generation?"
@@ -51,6 +53,9 @@ python cli.py "What is retrieval-augmented generation?"
 # or launch the chat UI
 streamlit run app.py
 ```
+
+No API key, no account, and no internet connection needed once the model is
+pulled — generation happens entirely on your own machine.
 
 Drop your own `.txt` / `.md` / `.pdf` files into `data/sample_docs/` (or
 point `--docs` / the sidebar at another folder) to ask questions about your
@@ -65,12 +70,12 @@ rag-research-assistant/
 ├── src/
 │   ├── ingest.py           # document loading + chunking
 │   ├── embed_store.py      # tfidf / sentence-transformers retrieval
-│   ├── llm_client.py       # Claude-backed generation + extractive fallback
+│   ├── llm_client.py       # Ollama-backed generation + extractive fallback
 │   └── qa_engine.py        # wires the pipeline together
 ├── data/sample_docs/       # example corpus so the demo works out of the box
-├── tests/                  # offline smoke tests (no API key needed)
+├── tests/                  # offline smoke tests (no Ollama required)
 ├── requirements.txt
-└── .env.example
+└── .env.example            # optional: OLLAMA_HOST / OLLAMA_MODEL overrides
 ```
 
 ## Running the tests
@@ -79,8 +84,8 @@ rag-research-assistant/
 pytest tests/ -v
 ```
 
-Tests run entirely on the `tfidf` backend with no API key or internet
-access required, so they're safe to run in CI.
+Tests run entirely on the `tfidf` backend with no Ollama instance or
+internet access required, so they're safe to run in CI.
 
 ## Design notes
 
@@ -88,9 +93,14 @@ access required, so they're safe to run in CI.
   so the project works offline out of the box; swapping in
   `sentence-transformers` is a one-line config change when better recall is
   worth the extra dependency.
-- **Graceful degradation over hard failure** — with no `ANTHROPIC_API_KEY`
-  set, the assistant still answers (extractively) rather than crashing,
-  which matters for anyone cloning this without a key on hand.
+- **Local-first generation** — running the LLM through Ollama means answers
+  are generated on-device: no API key, no per-query cost, and no data
+  leaving the machine. The trade-off is that generation quality and speed
+  depend on the model pulled and the hardware it runs on.
+- **Graceful degradation over hard failure** — if Ollama isn't installed,
+  isn't running, or the requested model hasn't been pulled, the assistant
+  still answers (extractively) rather than crashing, which matters for
+  anyone cloning this without having set Ollama up yet.
 - **Chunking is intentionally simple** — a fixed-size sliding window keeps
   the pipeline predictable and dependency-free; a token-aware or
   semantic-boundary splitter would be the natural next upgrade for a larger
@@ -104,6 +114,8 @@ access required, so they're safe to run in CI.
 - Support multi-turn follow-up questions that reference earlier answers.
 - Track which cited sources users actually click, as a feedback signal for
   retrieval quality.
+- Let `OLLAMA_MODEL` be swapped per-query, so different questions can route
+  to smaller/faster or larger/more-capable local models.
 
 ## License
 
