@@ -1,0 +1,18 @@
+Retrieval-augmented generation, or RAG, is a way of answering questions by
+combining two systems instead of relying on one. A retriever first searches
+a collection of documents and pulls out the passages most relevant to the
+question. A language model then reads those passages and writes an answer
+grounded in them, rather than relying only on what it memorized during
+training.
+
+This matters for two reasons. First, it lets a model answer questions about
+information it was never trained on, such as a company's internal
+documents or a student's own notes, as long as those documents are indexed.
+Second, it makes answers checkable: because the system knows which
+passages it used, it can cite them, so a user can verify a claim instead of
+taking it on faith.
+
+A typical RAG pipeline has three stages: chunking documents into small
+overlapping pieces, embedding or indexing those pieces so they can be
+searched by meaning, and generating an answer conditioned on the
+highest-scoring pieces for a given query.

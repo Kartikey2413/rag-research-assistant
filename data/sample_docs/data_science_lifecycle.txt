@@ -1,0 +1,16 @@
+The data science lifecycle describes the stages a project typically moves
+through, from a business question to a working system. Problem framing
+comes first: turning a vague goal into a specific, measurable question.
+Data collection and cleaning follow, since most real-world data arrives
+incomplete, duplicated, or inconsistently labeled.
+
+Once the data is usable, feature engineering and modeling begin. This is
+where raw fields become the inputs a model can learn from, and where a
+baseline model is built before anything more complex is attempted.
+Evaluation comes next: checking not just accuracy, but whether the model's
+mistakes are the kind the business can tolerate.
+
+The final and most often skipped stage is deployment and monitoring.
+A model that only exists in a notebook creates no value; it needs to run
+where decisions are actually made, and it needs to be watched afterward,
+since real-world data drifts and a model's performance can quietly decay.

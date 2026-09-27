@@ -1,0 +1,17 @@
+Transformers are a neural network architecture built around a mechanism
+called self-attention, which lets every position in a sequence look at
+every other position and decide how much to weigh it. This replaced
+earlier approaches that processed text one step at a time, and it is the
+architecture behind most modern large language models.
+
+Each transformer layer has two main parts: a self-attention block, which
+mixes information across positions, and a feed-forward block, which
+transforms each position's representation independently. Stacking many of
+these layers lets the network build up increasingly abstract
+representations of the input.
+
+Because attention has no built-in sense of order, transformers add
+positional information separately, so the model can tell "the cat sat on
+the mat" apart from "the mat sat on the cat." This combination of
+attention plus position information is what allows transformers to scale
+well to long sequences and large datasets.
