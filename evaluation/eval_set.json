@@ -1,0 +1,4 @@
+[
+  {"question": "REPLACE with a question your documents answer", "expected_source": "file_name_substring", "expected_keywords": ["keyword1", "keyword2"]},
+  {"question": "REPLACE with the same idea, worded differently from the document", "expected_source": "file_name_substring", "expected_keywords": ["keyword1"]}
+]

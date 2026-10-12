@@ -3,11 +3,8 @@ numpy>=1.24
 scikit-learn>=1.3
 pypdf>=3.17
 python-dotenv>=1.0
-streamlit>=1.32
-anthropic>=0.34
-pytest>=8.0
-
-# Optional: higher-recall dense embeddings. Needs internet access on first
-# run to download the model, so they're commented out by default — the
-# project runs fully offline on the tfidf backend without them.
-# sentence-transformers>=2.6
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+slowapi>=0.1.9
+# optional dense embeddings (needs ~1 GB RAM): sentence-transformers>=2.6
