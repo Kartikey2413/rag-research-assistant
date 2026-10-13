@@ -31,6 +31,7 @@ class RAGPipeline:
         answer = generate_answer(query, hits)
         return {
             "answer": answer,
+            "contexts": [c.text for c, _ in hits],
             "sources": [
                 {"source": c.source, "snippet": c.text[:200], "score": round(score, 3)}
                 for c, score in hits

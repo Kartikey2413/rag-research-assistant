@@ -24,7 +24,7 @@ START, END = "<!-- EVAL:START -->", "<!-- EVAL:END -->"
 
 
 def evaluate(pipeline, items):
-    ranks, keyword_ok, times = [], [], []
+    ranks, keyword_ok, ctx_ok, times = [], [], [], []
     for item in items:
         t = time.perf_counter()
         result = pipeline.ask(item["question"])
@@ -33,12 +33,15 @@ def evaluate(pipeline, items):
         ranks.append(next((i for i, n in enumerate(names) if item["expected_source"].lower() in n), None))
         words = [k.lower() for k in item["expected_keywords"]]
         keyword_ok.append(sum(w in result["answer"].lower() for w in words) / len(words) >= 0.5)
+        ctx = " ".join(result.get("contexts", [])).lower()
+        ctx_ok.append(sum(w in ctx for w in words) / len(words) >= 0.5)
     n = len(items)
     return {
         "n": n,
         "hit1": sum(r == 0 for r in ranks) / n,
         "hitk": sum(r is not None for r in ranks) / n,
         "mrr": sum(1 / (r + 1) for r in ranks if r is not None) / n,
+        "ctx_recall": sum(ctx_ok) / n,
         "keywords": sum(keyword_ok) / n,
         "p50": statistics.median(times),
         "p95": sorted(times)[int(0.95 * (n - 1))],
@@ -53,6 +56,7 @@ def table(results, top_k, with_llm):
         ("Hit@1", lambda r: pct(r["hit1"])),
         (f"Hit@{top_k}", lambda r: pct(r["hitk"])),
         ("MRR", lambda r: f"{r['mrr']:.3f}"),
+        ("Retrieval recall (keywords in retrieved chunks)", lambda r: pct(r["ctx_recall"])),
         ("Answer accuracy (keywords)" if with_llm else "Context keyword coverage", lambda r: pct(r["keywords"])),
         ("Latency p50 / p95", lambda r: f"{r['p50'] * 1000:.0f} / {r['p95'] * 1000:.0f} ms"),
     ]

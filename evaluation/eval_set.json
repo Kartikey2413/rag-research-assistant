@@ -1,4 +1,438 @@
 [
-  {"question": "REPLACE with a question your documents answer", "expected_source": "file_name_substring", "expected_keywords": ["keyword1", "keyword2"]},
-  {"question": "REPLACE with the same idea, worded differently from the document", "expected_source": "file_name_substring", "expected_keywords": ["keyword1"]}
+ {
+  "question": "What three components make up an origin in the Same-Origin Policy?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "scheme",
+   "host",
+   "port"
+  ],
+  "id": 1,
+  "type": "direct",
+  "reference_answer": "The triple of scheme, host and port.",
+  "source_page": 18
+ },
+ {
+  "question": "Which Content-Security-Policy directive is the modern standard for preventing clickjacking?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "frame-ancestors"
+  ],
+  "id": 2,
+  "type": "direct",
+  "reference_answer": "frame-ancestors, which supersedes the older X-Frame-Options header.",
+  "source_page": 22
+ },
+ {
+  "question": "What does TOCTTOU stand for, and what is one countermeasure?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "time of check",
+   "time of use",
+   "atomic"
+  ],
+  "id": 3,
+  "type": "direct",
+  "reference_answer": "Time Of Check To Time Of Use. Countermeasures include making check and use atomic (e.g. open with O_CREAT|O_EXCL or mkstemp), using file descriptors instead of names, dropping privilege, or using O_NOFOLLOW.",
+  "source_page": 14
+ },
+ {
+  "question": "Which printf format specifier can be abused to write to memory, and what does it write?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "%n",
+   "number of characters"
+  ],
+  "id": 4,
+  "type": "direct",
+  "reference_answer": "%n. It writes the number of characters printed so far to the address found in the next stack word.",
+  "source_page": 15
+ },
+ {
+  "question": "Which OpenSSL versions were affected by Heartbleed, what is its CVE number, and which version fixed it?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "cve-2014-0160",
+   "1.0.1f",
+   "1.0.1g"
+  ],
+  "id": 5,
+  "type": "direct",
+  "reference_answer": "OpenSSL 1.0.1 to 1.0.1f were affected; the CVE is CVE-2014-0160; the fix came in OpenSSL 1.0.1g.",
+  "source_page": 16
+ },
+ {
+  "question": "What is the CVE number of Dirty COW and which Linux kernel versions did it affect?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "cve-2016-5195",
+   "2.6.22",
+   "4.8.3"
+  ],
+  "id": 6,
+  "type": "direct",
+  "reference_answer": "CVE-2016-5195; it existed from Linux 2.6.22 to 4.8.3, about nine years.",
+  "source_page": 14
+ },
+ {
+  "question": "If the Same-Origin Policy exists, why can a malicious site still forge a request to my bank?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+    "cross-origin",
+   "cookie"
+  ],
+  "id": 7,
+  "type": "paraphrased",
+  "reference_answer": "SOP only stops a page from reading cross-origin responses. The request itself is still sent, with the victim's cookies attached, so a CSRF action can still happen.",
+  "source_page": 18
+ },
+ {
+  "question": "Why is calling a shell through system() risky inside a program that runs with its owner's privileges, and what should be used instead?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "execve",
+    "ifs"
+  ],
+  "id": 8,
+  "type": "paraphrased",
+  "reference_answer": "system() invokes a shell that obeys PATH, IFS and metacharacters, which the user controls. Use execve()/execv() with an argument array and an absolute path.",
+  "source_page": 12
+ },
+ {
+  "question": "Why isn't stripping the word 'script' from user input a valid defence against XSS?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "onerror",
+   "encoding",
+   "csp"
+  ],
+  "id": 9,
+  "type": "paraphrased",
+  "reference_answer": "Attackers can use other tags, event handlers such as onerror, and different encodings. The correct defence is context-aware output encoding plus CSP.",
+  "source_page": 20
+ },
+ {
+  "question": "Would CSRF tokens stop a clickjacking attack? Explain.",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "genuine",
+   "frame-ancestors",
+   "x-frame-options"
+  ],
+  "id": 10,
+  "type": "paraphrased",
+  "reference_answer": "No. In clickjacking the victim's click is a genuine action performed on the real page, so any tokens are valid. The fix is frame-ancestors or X-Frame-Options.",
+  "source_page": 22
+ },
+ {
+  "question": "Why can an XSS flaw defeat CSRF protections?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "csrf token", 
+   "same origin"
+  ],
+  "id": 11,
+  "type": "paraphrased",
+  "reference_answer": "Injected script runs inside the vulnerable site's origin, so it can read the CSRF token and use it. XSS should be fixed first.",
+  "source_page": 21
+ },
+ {
+  "question": "What are the three types of XSS?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "reflected",
+   "stored",
+   "dom"
+  ],
+  "id": 12,
+  "type": "direct",
+  "reference_answer": "Reflected (non-persistent), stored (persistent) and DOM-based.",
+  "source_page": 19
+ },
+ {
+  "question": "Compare the root causes of Shellshock and Heartbleed.",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "bash",
+   "trailing",
+   "openssl",
+   "length"
+  ],
+  "id": 13,
+  "type": "multi-fact",
+  "reference_answer": "Shellshock: the bash parser kept executing trailing commands after an exported function definition in an environment variable (command injection). Heartbleed: OpenSSL trusted the attacker-supplied heartbeat length with no bounds check, causing a buffer over-read that leaks memory.",
+  "source_page": 16
+ },
+ {
+  "question": "Describe the typical steps of a real-world browser exploit chain.",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "use-after-free", 
+   "aslr", 
+   "sandbox escape"
+  ],
+  "id": 14,
+  "type": "multi-fact",
+  "reference_answer": "1) A memory corruption bug in the renderer (use-after-free or type confusion in the JS engine). 2) An information leak to defeat ASLR. 3) Bypassing DEP/CFI via ROP, JIT abuse or data-only attacks. 4) A sandbox escape using a second bug.",
+  "source_page": 7
+ },
+ {
+  "question": "For void f(int x, int y) { if (x > 10) { if (y == 2*x) abort(); } }, what inputs does concolic execution find that reach abort(), and how?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "11",
+   "22",
+   "solver"
+  ],
+  "id": 15,
+  "type": "multi-fact",
+  "reference_answer": "x=11, y=22 (any x>10 with y==2x). Starting from x=0,y=0 it negates path constraints and asks a solver: first x>10 gives x=11,y=0, then negating y!=2x gives x=11,y=22.",
+  "source_page": 9
+ },
+ {
+  "question": "What six clause categories does the ToS chatbot plan suggest as a starting set?",
+  "expected_source": "Red-Flag",
+  "expected_keywords": [
+   "arbitration",
+   "renewal",
+   "retention",
+   "unilateral"
+  ],
+  "id": 16,
+  "type": "direct",
+  "reference_answer": "Data sharing/selling to third parties; broad IP/license grants over user content; arbitration/waiver of right to sue; auto-renewal/cancellation friction; unilateral changes to terms without notice; data retention after account deletion.",
+  "source_page": null
+ },
+ {
+  "question": "How many real ToS/privacy policies should be collected, and how many clauses hand-labeled?",
+  "expected_source": "Red-Flag",
+  "expected_keywords": [
+   "30",
+   "50",
+   "200",
+   "500"
+  ],
+  "id": 17,
+  "type": "direct",
+  "reference_answer": "30-50 real ToS/privacy policies, and 200-500 hand-labeled clauses.",
+  "source_page": null
+ },
+ {
+  "question": "What fraction of the labeled data should be locked away, and when may it be used?",
+  "expected_source": "Red-Flag",
+  "expected_keywords": [
+   "15",
+   "20",
+   "test"
+  ],
+  "id": 18,
+  "type": "paraphrased",
+  "reference_answer": "15-20% should be held out as a test set that is not touched until the final evaluation.",
+  "source_page": null
+ },
+ {
+  "question": "What baseline model does the plan recommend building first?",
+  "expected_source": "Red-Flag",
+  "expected_keywords": [
+   "tf-idf",
+   "logistic regression"
+  ],
+  "id": 19,
+  "type": "direct",
+  "reference_answer": "A simple TF-IDF plus logistic regression (or similar) model per category.",
+  "source_page": null
+ },
+ {
+  "question": "Which error rate matters most for the ToS flagging model and why?",
+  "expected_source": "Red-Flag",
+  "expected_keywords": [
+   "negative",
+   "risky"
+  ],
+  "id": 20,
+  "type": "paraphrased",
+  "reference_answer": "The false-negative rate, because missing a real risky clause is worse than a false alarm.",
+  "source_page": null
+ },
+ {
+  "question": "Is there an existing public source the plan suggests checking for starter training data?",
+  "expected_source": "Red-Flag",
+  "expected_keywords": [
+   "tos;dr"
+  ],
+  "id": 21,
+  "type": "paraphrased",
+  "reference_answer": "Yes: ToS;DR, if it has a usable public dataset or API export.",
+  "source_page": null
+ },
+ {
+  "question": "How should the work be split between the classifier and the LLM layer in the ToS chatbot?",
+  "expected_source": "Red-Flag",
+  "expected_keywords": [
+   "classifier",
+   "llm",
+   "explain"
+  ],
+  "id": 22,
+  "type": "multi-fact",
+  "reference_answer": "The classifier flags and categorizes clauses; a general LLM via API explains in plain language why and handles follow-up Q&A. This split should be stated explicitly.",
+  "source_page": null
+ },
+ {
+  "question": "How many review rounds and fix rounds does the plan allow?",
+  "expected_source": "Red-Flag",
+  "expected_keywords": [
+   "review",
+   "fix",
+   "one"
+  ],
+  "id": 23,
+  "type": "direct",
+  "reference_answer": "One review round and one fix round, then stop and ship.",
+  "source_page": null
+ },
+ {
+  "question": "According to the proofreading guide, when is earning ₹20,000+ per month realistic?",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "month 3",
+   "20,000"
+  ],
+  "id": 24,
+  "type": "direct",
+  "reference_answer": "From month 3 onward if you stay consistent; weeks 1-2 have no income, weeks 3-6 about ₹3,000-8,000, months 2-3 about ₹12,000-18,000.",
+  "source_page": null
+ },
+ {
+  "question": "What is the difference between proofreading and copy editing?",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "surface",
+   "rewrit",
+   "clarity",
+   "style"
+  ],
+  "id": 25,
+  "type": "multi-fact",
+  "reference_answer": "Proofreading is the final check for surface-level errors (spelling, grammar, punctuation, consistency, formatting) with no rewriting. Copy editing adds clarity and style on top of grammar and consistency.",
+  "source_page": null
+ },
+ {
+  "question": "Give the hourly and per-word examples of how ₹20,000 per month breaks down.",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "500",
+   "40",
+   "0.40",
+   "50,000"
+  ],
+  "id": 26,
+  "type": "multi-fact",
+  "reference_answer": "Hourly: ₹500/hr for about 40 hours a month (~10 hrs/week). Per-word: ₹0.40/word for about 50,000 words a month (~10-12 hrs/week).",
+  "source_page": null
+ },
+ {
+  "question": "How many words per hour can an experienced proofreader handle?",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "1,000",
+   "1,500"
+  ],
+  "id": 27,
+  "type": "direct",
+  "reference_answer": "About 1,000-1,500 words per hour.",
+  "source_page": null
+ },
+ {
+  "question": "Which local niche does the guide recommend for a proofreader based in Dehradun?",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "thesis",
+   "student"
+  ],
+  "id": 28,
+  "type": "paraphrased",
+  "reference_answer": "Student thesis and dissertation proofreading, since Dehradun has many students (UPES, Graphic Era, DIT, Doon University); also local businesses and bloggers.",
+  "source_page": null
+ },
+ {
+  "question": "How many pieces should a beginner proofread for free before they stop?",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "testimonial",
+   "3",
+   "5"
+  ],
+  "id": 29,
+  "type": "paraphrased",
+  "reference_answer": "No more than 3-5 pieces, in exchange for written testimonials.",
+  "source_page": null
+ },
+ {
+  "question": "For which jobs should the scope be agreed in writing, and what should it include?",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "2,000",
+   "word count",
+   "deadline",
+   "revision"
+  ],
+  "id": 30,
+  "type": "paraphrased",
+  "reference_answer": "Anything over ₹2,000; it should include word count, deadline and number of revision rounds.",
+  "source_page": null
+ },
+ {
+  "question": "What is the number one scam pattern aimed at beginner proofreaders?",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "pay",
+   "upfront",
+   "register"
+  ],
+  "id": 31,
+  "type": "paraphrased",
+  "reference_answer": "Being asked to pay money upfront to 'register' for a job or platform; legitimate proofreading work never asks for upfront payment.",
+  "source_page": null
+ },
+ {
+  "question": "What rate range does the guide give for a specialist proofreader from month 3 onward?",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "600",
+   "800",
+   "0.50",
+   "0.75"
+  ],
+  "id": 32,
+  "type": "direct",
+  "reference_answer": "₹600-800+ per hour, or ₹0.50-0.75 per word.",
+  "source_page": null
+ },
+ {
+  "question": "What does the 90-day plan say to do once you have five or more reviews, and what income target applies to days 46-75?",
+  "expected_source": "Freelance",
+  "expected_keywords": [
+   "15,000",
+   "18,000",
+   "raise"
+  ],
+  "id": 33,
+  "type": "multi-fact",
+  "reference_answer": "Raise rates by 20-30% (and move toward Upwork/Reedsy-type higher-pay clients); the target for days 46-75 is ₹15,000-18,000 per month.",
+  "source_page": null
+ },
+ {
+  "question": "What does concolic execution stand for and what does it combine?",
+  "expected_source": "System_Web_Security",
+  "expected_keywords": [
+   "concrete",
+   "symbolic",
+   "solver"
+  ],
+  "id": 40,
+  "type": "direct",
+  "reference_answer": "CONCrete + symbOLIC: it runs the program on a concrete input while tracking symbolic expressions, then negates branch conditions and uses an SMT/constraint solver to find inputs for new paths.",
+  "source_page": 9
+ }
 ]
