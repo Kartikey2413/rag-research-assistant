@@ -4,17 +4,22 @@
 
 Upload your documents, let the assistant study them, then ask questions. Every answer comes with the exact passages it was drawn from. Built with FastAPI, a local LLM via [Ollama](https://ollama.com), Docker, and an evaluation harness that measures retrieval quality.
 
-**Live demo:** `http://<your-ec2-public-ip>` · **API docs:** `/docs`
+**API docs:** `/docs` (available when running locally)
 
 ## Results
 
-Measured on a hand-written question set (`evaluation/eval_set.json`):
+Retrieval was measured on a self-written, 34-question benchmark over 3 documents (`evaluation/eval_set.json`), with top-4 passages retrieved per question and Ollama disabled so the numbers are deterministic:
 
-<!-- EVAL:START -->
-_Run the evaluation to fill in this table._
-<!-- EVAL:END -->
+| Metric | TF-IDF | MiniLM embeddings |
+|---|---|---|
+| Questions | 34 | 34 |
+| Retrieval recall (keywords in retrieved chunks) | 88.2% | 76.5% |
 
-Hit@k: the correct source is in the top-k passages. MRR: how high it ranks (1.0 = always first). Keyword score: answers containing at least half of the expected key terms.
+**Retrieval recall:** a question counts as retrieved if at least half of its expected keywords appear in the top-4 retrieved chunks. It is a quick proxy for "did retrieval find the right text", not a full answer-accuracy measure.
+
+TF-IDF scores higher here because many questions contain exact terms (CVE numbers, header names, version strings) that keyword matching handles better than a small embedding model. Embeddings are expected to help more on heavily paraphrased queries.
+
+**Limitations:** the benchmark is small and written by the author. One source PDF contains a practice question bank that can outrank real explanations during retrieval. Answer-level quality (LLM output) has not been scored yet.
 
 ## How it works
 
@@ -33,7 +38,7 @@ Each visitor's uploads live in a private session (limited files and size, delete
 
 ```bash
 pip install -r requirements-dev.txt
-ollama pull llama3                 # optional: LLM answers; otherwise extractive fallback
+ollama pull llama3.1               # optional: LLM answers; otherwise extractive fallback
 uvicorn api.main:app               # web UI + API on http://localhost:8000
 ```
 
@@ -67,13 +72,13 @@ Optional env vars: `OLLAMA_MODEL`, `OLLAMA_HOST`, `EMBEDDING_BACKEND`, `TOP_K`, 
 
 ## Evaluation
 
-Replace the template in `evaluation/eval_set.json` with 25–40 questions over your documents (`expected_source` = part of the file name, `expected_keywords` = terms a correct answer contains; include paraphrased questions), then:
+Questions live in `evaluation/eval_set.json` (`expected_source` = part of the file name, `expected_keywords` = terms a correct answer contains). To reproduce the table above with your own documents in `data/sample_docs/`:
 
 ```bash
-python -m evaluation.run_eval --backends tfidf sentence-transformers --update-readme
+python -m evaluation.run_eval --backends tfidf sentence-transformers
 ```
 
-Add `--with-llm` to grade real Ollama answers. Without it, retrieval is measured alone (free and deterministic).
+Add `--with-llm` to grade real Ollama answers. Without it, retrieval is measured alone (free and deterministic). Only the retrieval recall row is reported above; the other rows the script prints (Hit@k, MRR) are near their ceiling on a corpus this small.
 
 ## Deploy
 
